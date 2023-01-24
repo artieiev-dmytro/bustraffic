@@ -4,4 +4,7 @@
     <div class="row">
         <p>{{object.name}}</p>
     </div>
+    <a href="{% url 'cities:delete' pk=object.id %}">
+        <button type="button" class="btn btn-outline-danger">Delete</button>  
+    </a>
 {% endblock %}
