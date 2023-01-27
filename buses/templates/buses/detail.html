@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+    <div class="row">
+        <table>
+            <tr>
+                <td>{{object.name}}</td>
+                <td>{{object.from_city}}</td>
+                <td>{{object.to_city}}</td>
+                <td>{{object.bus_time}}</td>
+            </tr>
+        </table>
+    </div>
+    <a href="{% url 'buses:delete' pk=object.pk %}">
+        <button type="button" class="btn btn-outline-danger">Delete</button>  
+    </a>
+{% endblock %}
