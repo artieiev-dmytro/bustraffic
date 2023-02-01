@@ -6,6 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from .models import Bus
@@ -37,21 +38,21 @@ class BusDetailView(DetailView):
     template_name = 'buses/detail.html'
 
 
-class BusCreateView(SuccessMessageMixin, CreateView):
+class BusCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Bus
     template_name = 'buses/create.html'
     form_class = BusForm
     success_message = 'The bus was successfully created'
 
 
-class BusUpdateView(SuccessMessageMixin, UpdateView):
+class BusUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Bus
     template_name = 'buses/update.html'
     form_class = BusForm
     success_message = 'The city was successfully changed'
 
 
-class BusDeleteView(DeleteView):
+class BusDeleteView(LoginRequiredMixin, DeleteView):
     model = Bus
     success_url = reverse_lazy('buses:home')
 

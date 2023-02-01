@@ -1,5 +1,7 @@
+{% load static %}
 {% url 'cities:home' as cities_home_url %}
 {% url 'buses:home' as buses_home_url %}
+{% url 'routes:list' as routes_list_url %}
 {% url 'cities:create' as cities_create_url %}
 {% url 'buses:create' as buses_create_url %}
 
@@ -9,17 +11,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UkraineBUS</title>
+    <link rel="shortcut icon" type="image/png" href="{% static "img/favicon.ico" %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   </head>
+  
   <body>
-    <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
+    <nav class="navbar navbar-expand-lg navbar-light container" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">UkraineBUS</a>
+          <a class="navbar-brand" href="{% url 'routes:home' %}">UkraineBUS</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav ml-auto">
               <li class="nav-item">
                 <a class="nav-link {% if request.path == cities_home_url %}active{% endif %}" aria-current="page" href="{% url 'cities:home' %}">Cities</a>
               </li>
@@ -27,10 +32,11 @@
                 <a class="nav-link {% if request.path == buses_home_url %}active{% endif %}" aria-current="page" href="{% url 'buses:home' %}">Buses</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
+                <a class="nav-link {% if request.path == routes_list_url %}active{% endif %}" href="{% url 'routes:list' %}">List</a>
               </li>
-              <li class="nav-item dropdown {% if request.path == cities_create_url or request.path == buses_create_url %}active{% endif %}">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {% if user.is_authenticated%}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% if request.path == cities_create_url or request.path == buses_create_url %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Add
                 </a>
                 <ul class="dropdown-menu">
@@ -38,6 +44,22 @@
                   <li><a class="dropdown-item" href="{% url 'buses:create' %}">New bus</a></li>
                 </ul>
               </li>
+              {% else %}
+              <li class="nav-item dropdown">
+                <a class="nav-link disabled" href="#">
+                  Add
+                </a>
+              </li>
+              {% endif %}
+              {% if not user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'accounts:login' %}">Войти</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'accounts:logout' %}">Вийти</a>
+              </li>
+              {% endif %}
             </ul>
           </div>
         </div>
@@ -66,9 +88,17 @@
     </div>
 
     <div class="container">
-      {% block content %}{% endblock content %}
+          {% block content %}{% endblock content %}
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('.single').select2();
+        $('.multiple').select2();
+      });
+    </script>
   </body>
 </html>

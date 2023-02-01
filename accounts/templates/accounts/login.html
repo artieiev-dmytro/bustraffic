@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% url 'accounts:login' as action %}
+{% include 'form.html' with button='Sing' action=action %}
+    
+{% endblock %}

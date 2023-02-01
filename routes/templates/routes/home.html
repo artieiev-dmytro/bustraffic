@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Search routes</h1>
+{% url 'routes:find_routes' as action %}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        {% if routes %} 
+					<h3>Route from {{cities.from_city.name}} to {{cities.to_city.name}}</h3>
+					{% for route in routes %}
+						<form action="{% url 'routes:add_route' %}" method="post">
+							{% csrf_token %}
+							<input type="hidden" name="from_city" value="{{ cities.from_city.id }}">
+							<input type="hidden" name="to_city" value="{{ cities.to_city.id }}">
+							<input type="hidden" name="total_time" value="{{ route.total_time }}">
+							<input type="hidden" name="buses" 
+								value="{% for bus in route.buses %}{{bus.id}},{% endfor %}">
+						<p>travel time {{route.total_time}}</p>
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">List buses</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for bus in route.buses %}
+								<tr>
+									<th scope="row">{{ forloop.counter }}</th>
+									<td>Bus {{ bus }} from {{bus.from_city}} to {{bus.to_city}}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+						<button type="submit" class="btn btn-success">Save</button>
+						</form>
+						<br><br>
+					{% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+
+{% include 'form.html' with button='Search' action=action %}
+
+{% endblock content %}
